@@ -13,9 +13,7 @@ cluster.outputPin(1, true, false)
 .then(() => {
   return cluster.setAllPins(true);
 })
-.then(() => {
-  setTimeout(() => {}, 2000);
-})
+.delay(2000)
 .then(() => {
   return cluster.setAllPins(false);
 });
