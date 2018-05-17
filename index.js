@@ -18,7 +18,7 @@ class PCF8574Cluster extends EventEmitter {
 
 			pcf.on('input', (data) => {
 				data.real_pin = data.pin;
-				data.pin = this._getPinByRealPin(i, data.real_pin);
+				data.pin = this._getPinByExpanderPinAndIndex(i, data.real_pin);
 				data.expander_index = i;
 				this.emit('input', data);
 			});
@@ -44,7 +44,7 @@ class PCF8574Cluster extends EventEmitter {
 		//TODO:params validation
 
 		let index = this._getExpanderIndexByPin(pin);
-		let realPin = this._getRealPin(index, pin);
+		let realPin = this._getExpanderPinByPinAndIndex(index, pin);
 
 		return this._pcf_instances[index].inputPin(realPin, inverted);
   }
@@ -53,7 +53,7 @@ class PCF8574Cluster extends EventEmitter {
 		//TODO: params validation
 
 		let index = this._getExpanderIndexByPin(pin);
-		let realPin = this._getRealPin(index, pin);
+		let realPin = this._getExpanderPinByPinAndIndex(index, pin);
 
 		return this._pcf_instances[index].outputPin(realPin, inverted, initialValue);
   }
@@ -62,7 +62,7 @@ class PCF8574Cluster extends EventEmitter {
 		//TODO: params validation
 
 		let index = this._getExpanderIndexByPin(pin);
-		let realPin = this._getRealPin(index, pin);
+		let realPin = this._getExpanderPinByPinAndIndex(index, pin);
 
 		return this._pcf_instances[index].setPin(realPin, value);
   }
@@ -71,7 +71,7 @@ class PCF8574Cluster extends EventEmitter {
 		//TODO: param validation
 
 		let index = this._getExpanderIndexByPin(pin);
-    let realPin = this._getRealPin(index, pin);
+    let realPin = this._getExpanderPinByPinAndIndex(index, pin);
 
 		return this._pcf_instances[index].getPinValue(realPin);
   }
@@ -99,16 +99,14 @@ class PCF8574Cluster extends EventEmitter {
 		return Math.ceil(pin / this._expander_pins_count) - 1;
 	}
 
-	_getRealPin(index, pin) {
+	_getExpanderPinByPinAndIndex(index, pin) {
 		return (pin - (index  * this._expander_pins_count)) - 1;
 	}
 
-	_getPinByRealPin(index, realPin) {
-		if (index === 0) {
-			return realPin + 1;
-		} else {
-			return (index * this._expander_pins_count) + realPin + 1;
-		}
+	_getPinByExpanderPinAndIndex(index, pin) {
+    pin += 1;
+
+		return (index === 0) ? pin : ((index * this._expander_pins_count) + pin);
 	}
 }
 
