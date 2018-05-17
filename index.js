@@ -7,6 +7,7 @@ class PCF8574Cluster extends EventEmitter {
     //TODO: params validation
 
     this._pcf_instances = [];
+
 		this._expander_pins_count = 8;
 		this._expanders_count = addresses.length;
 		this._total_pins_count =
@@ -26,6 +27,7 @@ class PCF8574Cluster extends EventEmitter {
     });
   }
 
+  //index starts from 1-x
   enableInterrupt(index, pin) {
 		//TODO: params validationi
 
@@ -75,13 +77,13 @@ class PCF8574Cluster extends EventEmitter {
   }
 
   setAllPins(value) {
-    let pcfs = [];
+    let promises = [];
 
 		this._pcf_instances.forEach(pcf => {
-			pcfs.push(pcf.setAllPins(value));
+			promises.push(pcf.setAllPins(value));
 		});
 
-    return Promise.all(pcfs);
+    return Promise.all(promises);
   }
 
 	removeAllListeners() {
@@ -89,6 +91,9 @@ class PCF8574Cluster extends EventEmitter {
       pcf.removeAllListeners();
     });
 	}
+
+
+
 
 	_getExpanderIndexByPin(pin) {
 		return Math.ceil(pin / this._expander_pins_count) - 1;

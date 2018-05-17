@@ -13,6 +13,12 @@ cluster.outputPin(1, true, false)
 .then(() => {
   return cluster.setAllPins(true);
 })
+.then(() => {
+  return cluster.getPinValue(1);
+})
+.then((pinValue) => {
+  console.log('pin1 value', pinValue);
+})
 .delay(2000)
 .then(() => {
   return cluster.setAllPins(false);
