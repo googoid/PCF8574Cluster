@@ -1,28 +1,16 @@
 const EventEmitter = require('events');
 const PCF8574 = require('pcf8574').PCF8574;
 
-const chai = require('chai');
-const chaiParam = require('chai-param');
-const expect = chai.expect;
-chai.use(chaiParam);
-
 class PCF8574Cluster extends EventEmitter {
   constructor(i2cBus, addresses, initialStates) {
 		super();
     //TODO: params validation
-		expect(addresses).param('addresses')
-		.to.be.an('array');
-
-		if (initialStates) {
-		
-		} else {
-			
-		}
 
     this._pcf_instances = [];
 		this._expander_pins_count = 8;
 		this._expanders_count = addresses.length;
-		this._total_pins_count = this._expander_pins_count * this._expanders_count.length;
+		this._total_pins_count =
+      this._expander_pins_count * this._expanders_count;
 
     addresses.forEach((address, i) => {
       let pcf = new PCF8574(i2cBus, address, initialStates[i]);
@@ -54,7 +42,7 @@ class PCF8574Cluster extends EventEmitter {
 		//TODO:params validation
 
 		let index = this._getExpanderIndexByPin(pin);
-		let realPin = this._getRealPin(index, pin);	
+		let realPin = this._getRealPin(index, pin);
 
 		return this._pcf_instances[index].inputPin(realPin, inverted);
   }
@@ -64,7 +52,7 @@ class PCF8574Cluster extends EventEmitter {
 
 		let index = this._getExpanderIndexByPin(pin);
 		let realPin = this._getRealPin(index, pin);
-		
+
 		return this._pcf_instances[index].outputPin(realPin, inverted, initialValue);
   }
 
@@ -87,9 +75,13 @@ class PCF8574Cluster extends EventEmitter {
   }
 
   setAllPins(value) {
+    let pcfs = [];
+
 		this._pcf_instances.forEach(pcf => {
-			pcf.setAllPins(value);
+			pcfs.push(pcf.setAllPins(value));
 		});
+
+    return Promise.all(pcfs);
   }
 
 	removeAllListeners() {
@@ -107,7 +99,7 @@ class PCF8574Cluster extends EventEmitter {
 	}
 
 	_getPinByRealPin(index, realPin) {
-		if (index == 0) {
+		if (index === 0) {
 			return realPin + 1;
 		} else {
 			return (index * this._expander_pins_count) + realPin + 1;
