@@ -8,7 +8,7 @@ const cluster = new PCF8574Cluster(i2cBus, addresses, initialStates);
 
 cluster.setAllPins(true)
 .then(() => {
-  delay(2000);
+  setTimeout(() => {}, 2000);
 })
 .then(() => {
   return cluster.setAllPins(false);
