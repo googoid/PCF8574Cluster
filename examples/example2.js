@@ -6,7 +6,13 @@ const initialStates = [true, true];
 
 const cluster = new PCF8574Cluster(i2cBus, addresses, initialStates);
 
-cluster.setAllPins(true)
+cluster.outputPin(1, true, false)
+.then(() => {
+  return cluster.outputPin(2, true, false);
+})
+.then(() => {
+  return cluster.setAllPins(true);
+})
 .then(() => {
   setTimeout(() => {}, 2000);
 })

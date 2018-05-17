@@ -75,15 +75,13 @@ class PCF8574Cluster extends EventEmitter {
   }
 
   setAllPins(value) {
-    let promise = Promise.resolve();
+    let pcfs = [];
 
 		this._pcf_instances.forEach(pcf => {
-      promise = promise.then(() => {
-        return pcf.setAllPins(value);
-      });
+			pcfs.push(pcf.setAllPins(value));
 		});
 
-    return promise;
+    return Promise.all(pcfs);
   }
 
 	removeAllListeners() {
