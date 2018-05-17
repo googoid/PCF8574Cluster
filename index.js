@@ -43,7 +43,7 @@ class PCF8574Cluster extends EventEmitter {
   inputPin(pin, inverted) {
 		//TODO:params validation
 
-		let expData = this._getExpanderPinAndIndex(index, pin);
+		let expData = this._getExpander(pin);
 
 		return this._pcf_instances[expData.index].inputPin(expData.pin, inverted);
   }
@@ -51,7 +51,7 @@ class PCF8574Cluster extends EventEmitter {
   outputPin(pin, inverted, initialValue) {
 		//TODO: params validation
 
-		let expData = this._getExpanderPinAndIndex(index, pin);
+		let expData = this._getExpander(pin);
 
 		return this._pcf_instances[expData.index].outputPin(expData.pin, inverted, initialValue);
   }
@@ -59,7 +59,7 @@ class PCF8574Cluster extends EventEmitter {
   setPin(pin, value) {
 		//TODO: params validation
 
-		let expData = this._getExpanderPinAndIndex(index, pin);
+		let expData = this._getExpander(pin);
 
 		return this._pcf_instances[expData.index].setPin(expData.pin, value);
   }
@@ -67,7 +67,7 @@ class PCF8574Cluster extends EventEmitter {
   getPinValue(pin) {
 		//TODO: param validation
 
-    let expData = this._getExpanderPinAndIndex(index, pin);
+    let expData = this._getExpander(pin);
 
 		return this._pcf_instances[expData.index].getPinValue(expData.pin);
   }
@@ -105,7 +105,7 @@ class PCF8574Cluster extends EventEmitter {
 		return (index === 0) ? pin : ((index * this._expander_pins_count) + pin);
 	}
 
-  _getExpanderPinAndIndex(index, pin) {
+  _getExpander(pin) {
     let index = this._getExpanderIndexByPin(pin);
     let expanderPin = this._getExpanderPinByPinAndIndex(index, pin);
 
