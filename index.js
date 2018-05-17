@@ -4,7 +4,18 @@ const PCF8574 = require('pcf8574').PCF8574;
 class PCF8574Cluster extends EventEmitter {
   constructor(i2cBus, addresses, initialStates) {
 		super();
-    //TODO: params validation
+
+    if (!Array.isArray(addresses)) {
+      throw new Error('Addresses has to be an array');
+    }
+
+    if (!Array.isArray(initialStates)) {
+      throw new Error('Initial states has to be an array');
+    }
+
+    if (addresses.length != initialStates.length) {
+      throw new Error('Addresses and InitialStates should have same length');
+    }
 
     this._pcf_instances = [];
 
@@ -17,9 +28,11 @@ class PCF8574Cluster extends EventEmitter {
       let pcf = new PCF8574(i2cBus, address, initialStates[i]);
 
 			pcf.on('input', (data) => {
-				data.real_pin = data.pin;
-				data.pin = this._getPinByExpanderPinAndIndex(i, data.real_pin);
-				data.expander_index = i;
+				data.expander_pin = data.pin;
+        data.expander_index = i;
+				data.pin =
+          this._getPinByExpanderPinAndIndex(i, data.expander_pin);
+
 				this.emit('input', data);
 			});
 
@@ -29,7 +42,9 @@ class PCF8574Cluster extends EventEmitter {
 
   //index starts from 1-x
   enableInterrupt(index, pin) {
-		//TODO: params validationi
+		if (index < 1 || index > this._expanders_count) {
+      throw new Error('Expander index out of range');
+    }
 
 		return this._pcf_instances[index - 1].enableInterrupt(pin);
   }
@@ -41,35 +56,47 @@ class PCF8574Cluster extends EventEmitter {
   }
 
   inputPin(pin, inverted) {
-		//TODO:params validation
+		if (pin < 1 || pin > this._total_pins_count) {
+      throw new Error('Pin out of range');
+    }
 
-		let expData = this._getExpander(pin);
+		let expander = this._getExpander(pin);
 
-		return this._pcf_instances[expData.index].inputPin(expData.pin, inverted);
+		return this._pcf_instances[expander.index]
+      .inputPin(expander.pin, inverted);
   }
 
   outputPin(pin, inverted, initialValue) {
-		//TODO: params validation
+		if (pin < 1 || pin > this._total_pins_count) {
+      throw new Error('Pin out of range');
+    }
 
-		let expData = this._getExpander(pin);
+		let expander = this._getExpander(pin);
 
-		return this._pcf_instances[expData.index].outputPin(expData.pin, inverted, initialValue);
+		return this._pcf_instances[expander.index]
+      .outputPin(expander.pin, inverted, initialValue);
   }
 
   setPin(pin, value) {
-		//TODO: params validation
+		if (pin < 1 || pin > this._total_pins_count) {
+      throw new Error('Pin out of range');
+    }
 
-		let expData = this._getExpander(pin);
+		let expander = this._getExpander(pin);
 
-		return this._pcf_instances[expData.index].setPin(expData.pin, value);
+		return this._pcf_instances[expander.index]
+      .setPin(expander.pin, value);
   }
 
   getPinValue(pin) {
-		//TODO: param validation
+		if (pin < 1 || pin > this._total_pins_count) {
+      throw new Error('Pin out of range');
+    }
 
-    let expData = this._getExpander(pin);
+    let expander = this._getExpander(pin);
 
-		return this._pcf_instances[expData.index].getPinValue(expData.pin);
+		return this._pcf_instances[expander.index]
+      .getPinValue(expander.pin);
   }
 
   setAllPins(value) {
@@ -89,25 +116,24 @@ class PCF8574Cluster extends EventEmitter {
 	}
 
 
+  //function name ???
+  _getPinByExpanderPinAndIndex(index, pin) {
+    pin += 1;
 
+    return (index === 0) ? pin : ((index * this._expander_pins_count) + pin);
+  }
 
-	_getExpanderIndexByPin(pin) {
+	_getExpanderIndex(pin) {
 		return Math.ceil(pin / this._expander_pins_count) - 1;
 	}
 
-	_getExpanderPinByPinAndIndex(index, pin) {
+	_getExpanderPin(index, pin) {
 		return (pin - (index  * this._expander_pins_count)) - 1;
 	}
 
-	_getPinByExpanderPinAndIndex(index, pin) {
-    pin += 1;
-
-		return (index === 0) ? pin : ((index * this._expander_pins_count) + pin);
-	}
-
   _getExpander(pin) {
-    let index = this._getExpanderIndexByPin(pin);
-    let expanderPin = this._getExpanderPinByPinAndIndex(index, pin);
+    let index = this._getExpanderIndex(pin);
+    let expanderPin = this._getExpanderPin(index, pin);
 
     return { index: index, pin: expanderPin };
   }
