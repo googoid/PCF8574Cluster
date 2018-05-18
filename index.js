@@ -11,6 +11,7 @@ class PCF8574Cluster extends EventEmitter {
 
     this._pcf_instances = [];
 
+    //real working pins are 4, 5, 6
     this._rasppi_bcm_pins =
       [4, 17, 27, 22, 5, 6, 13, 26, 18, 23, 24, 25, 12, 16];
 
@@ -41,9 +42,9 @@ class PCF8574Cluster extends EventEmitter {
       throw new Error('Expander index out of range');
     }
 
-    if (this._rasppi_bcm_pins.indexOf(pin) == -1) {
+    /*if (this._rasppi_bcm_pins.indexOf(pin) == -1) {
       throw new Error('Wrong Raspberri Pi BCM pin');
-    }
+    }*/
 
     return this._pcf_instances[index - 1].enableInterrupt(pin);
   }
