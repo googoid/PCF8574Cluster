@@ -35,6 +35,10 @@ cluster.on('input', (data) => {
 
 process.on('SIGINT', function(){
   console.log('SIGINT');
+  console.log('before', cluster.listeners('connection'));
+
   cluster.removeAllListeners();
   cluster.disableAllInterrupts();
+
+  console.log('after', cluster.listeners('connection'));
 });
