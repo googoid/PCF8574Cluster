@@ -49,7 +49,15 @@ class PCF8574Cluster extends EventEmitter {
     return this._pcf_instances[index - 1].enableInterrupt(pin);
   }
 
-  disableInterrupt() {
+  disableInterrupt(index) {
+    if (index < 1 || index > this._expanders_count) {
+      throw new Error('Expander index out of range');
+    }
+
+    return this._pcf_instances[index - 1].disableInterrupt();
+  }
+
+  disableAllInterrupts() {
     this._pcf_instances.forEach(pcf => {
       pcf.disableInterrupt();
     });
