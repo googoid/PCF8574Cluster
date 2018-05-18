@@ -33,6 +33,7 @@ cluster.outputPin(1, true, false)
 
 process.on('SIGINT', function(){
   console.log('SIGINT');
+
   cluster.removeAllListeners();
   cluster.disableAllInterrupts();
 });

@@ -9,7 +9,6 @@ const cluster = new PCF8574Cluster(i2cBus, addresses, initialStates);
 cluster.enableInterrupt(1, 4);
 cluster.enableInterrupt(2, 5);
 
-
 cluster.outputPin(1, true, false)
 .then(() => {
   return cluster.outputPin(2, true, false);

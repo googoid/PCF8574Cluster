@@ -24,8 +24,7 @@ class PCF8574Cluster extends EventEmitter {
       pcf.on('input', (data) => {
         data.expander_pin = data.pin;
         data.expander_index = i;
-        data.pin =
-          this._getPinByExpanderPinAndIndex(i, data.expander_pin);
+        data.pin = this._getPinByExpander(i, data.expander_pin);
 
         this.emit('input', data);
       });
@@ -34,7 +33,6 @@ class PCF8574Cluster extends EventEmitter {
     });
   }
 
-  //index starts from 1-x
   enableInterrupt(index, pin) {
     if (index < 1 || index > this._expanders_count) {
       throw new Error('Expander index out of range');
@@ -111,7 +109,6 @@ class PCF8574Cluster extends EventEmitter {
     return Promise.all(promises);
   }
 
-  //?????????????
   removeAllListeners() {
     this._pcf_instances.forEach(pcf => {
       pcf.removeAllListeners();
@@ -121,8 +118,7 @@ class PCF8574Cluster extends EventEmitter {
   }
 
 
-  //function name ???
-  _getPinByExpanderPinAndIndex(index, pin) {
+  _getPinByExpander(index, pin) {
     pin += 1;
 
     return (index === 0) ? pin : ((index * this._expander_pins_count) + pin);
