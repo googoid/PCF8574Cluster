@@ -35,10 +35,12 @@ cluster.on('input', (data) => {
 
 process.on('SIGINT', function(){
   console.log('SIGINT');
-  console.log('before', cluster.listeners('input'));
+  console.log('listeners before remove', cluster.listeners('input'));
+  console.log('pcf listeners before remove', cluster._pcf_instances[0].listeners('input'));
 
   cluster.removeAllListeners();
   cluster.disableAllInterrupts();
 
-  console.log('after', cluster.listeners('input'));
+  console.log('listeners after remove', cluster.listeners('input'));
+  console.log('pcf listeners after remove', cluster._pcf_instances[0].listeners('input'));
 });
