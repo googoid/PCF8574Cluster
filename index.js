@@ -117,7 +117,7 @@ class PCF8574Cluster extends EventEmitter {
       pcf.removeAllListeners();
     });
 
-    return super.removeAllListeners();
+    //return super.removeAllListeners();
   }
 
 
