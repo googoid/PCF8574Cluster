@@ -2,19 +2,11 @@ const EventEmitter = require('events');
 const PCF8574 = require('pcf8574').PCF8574;
 
 class PCF8574Cluster extends EventEmitter {
-  constructor(i2cBus, addresses, initialStates) {
+  constructor(i2cBus, addresses, initialStates = []) {
     super();
 
     if (!Array.isArray(addresses)) {
       throw new Error('Addresses has to be an array');
-    }
-
-    if (!Array.isArray(initialStates)) {
-      throw new Error('Initial states has to be an array');
-    }
-
-    if (addresses.length != initialStates.length) {
-      throw new Error('Addresses and InitialStates should have same length');
     }
 
     this._pcf_instances = [];
@@ -25,7 +17,9 @@ class PCF8574Cluster extends EventEmitter {
       this._expander_pins_count * this._expanders_count;
 
     addresses.forEach((address, i) => {
-      let pcf = new PCF8574(i2cBus, address, initialStates[i]);
+      let initialState =
+        (typeof initialStates[i] == 'undefined') ? true : initialStates[i];
+      let pcf = new PCF8574(i2cBus, address, initialState);
 
       pcf.on('input', (data) => {
         data.expander_pin = data.pin;
@@ -117,10 +111,13 @@ class PCF8574Cluster extends EventEmitter {
     return Promise.all(promises);
   }
 
+  //?????????????
   removeAllListeners() {
     this._pcf_instances.forEach(pcf => {
       pcf.removeAllListeners();
     });
+
+    return super.removeAllListeners();
   }
 
 
