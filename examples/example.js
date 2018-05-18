@@ -24,9 +24,7 @@ cluster.outputPin(1, true, false)
 cluster.on('input', (data) => {
   console.log('input', data);
 
-  if (data.pin === 8) {
-    cluster.setPin(1, !cluster.getPinValue(1));
-  } else if(data.pin === 12){
+  if ([8, 12].indexOf(data.pin) > -1) {
     cluster.setPin(1, !cluster.getPinValue(1));
   }
 });
