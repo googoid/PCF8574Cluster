@@ -63,6 +63,16 @@ class PCF8574Cluster extends EventEmitter {
     });
   }
 
+  doPoll() {
+    let promises = [];
+
+    this._pcf_instances.forEach(pcf => {
+      promises.push(pcf.doPoll());
+    });
+
+    return Promise.all(promises);
+  }
+
   inputPin(pin, inverted) {
     if (pin < 1 || pin > this._total_pins_count) {
       throw new Error('Pin out of range');
