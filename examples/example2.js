@@ -1,7 +1,7 @@
 const PCF8574Cluster = require('../');
 const i2cBus = require('i2c-bus').openSync(1);
 
-const addresses = [0x20, 0x22];
+const addresses = [32, 38];
 const initialStates = [true, true];
 
 const cluster = new PCF8574Cluster(i2cBus, addresses, initialStates);
