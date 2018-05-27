@@ -21,9 +21,13 @@ cluster.outputPin(1, true, false)
 cluster.on('input', (data) => {
   console.log('input', data);
 
+  console.log(cluster.getPinValue(1), 'before')
+
   if ([10, 12].indexOf(data.pin) > -1) {
     cluster.setPin(1, !cluster.getPinValue(1));
   }
+
+  console.log(cluster.getPinValue(1), 'after')
 });
 
 
