@@ -2,6 +2,8 @@
 
 BASED ON [pcf8574](https://www.npmjs.com/package/pcf8574).
 
+Also You can use [node-red-contrib-pcf8574-cluster](https://www.npmjs.com/package/node-red-contrib-pcf8574-cluster) for Node-RED.
+
 Control each pin of a PCF8574/PCF8574A/PCF8574P I2C port expander IC.
 
 The PCF8574/PCF8574A is an 8 bit/pin port expander IC, which can be controlled over the I2C-Bus.
