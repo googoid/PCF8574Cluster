@@ -92,9 +92,9 @@ If an inverted input has a low level it will be interpreted as true and a high l
 An inverted output will write a low level if you set it to true and write a high level if false.
 
 
-### new PCF8574(i2cBus, address, initialState)
+### new PCF8574Cluster(i2cBus, address, initialStates)
 ```js
-constructor(i2cBus:I2cBus, addresses:array, initialState:array);
+constructor(i2cBus:I2cBus, addresses:array, initialStates:array);
 ```
 Constructor for a new PCF8574/PCF8574A cluster instance.
 
