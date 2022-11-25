@@ -13,6 +13,6 @@
   "author": "David Kasparov",
   "license": "ISC",
   "dependencies": {
-    "pcf8574": "^1.1.0"
+    "pcf8574": "^2.0.1"
   }
 }
